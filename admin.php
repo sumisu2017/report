@@ -12,7 +12,7 @@ switch ($op) {
         exit;
 
     case 'update':
-        $sn = update_article();
+        update_article($sn);
         header("location: index.php");
         exit;
 
@@ -49,6 +49,38 @@ function insert_article()
     $db->query($sql) or die($db->error);
     $sn = $db->insert_id;
 
+    //上傳圖片
+    upload_pic($sn);
+
+    return $sn;
+}
+
+function delete_article($sn)
+{
+    global $db;
+
+    $sql = "DELETE FROM `article` WHERE sn='{$sn}' and username='{$_SESSION['username']}'";
+    $db->query($sql) or die($db->error);
+}
+
+//更新文章
+function update_article($sn)
+{
+
+    global $db;
+    $title    = $db->real_escape_string($_POST['title']);
+    $content  = $db->real_escape_string($_POST['content']);
+    $username = $db->real_escape_string($_POST['username']);
+
+    $sql = "update `article` Set `title`='{$title}', `content`= '{$content}',`update_time`=NOW()  WHERE sn='{$sn}' ";
+    //,username={$username}
+    $db->query($sql) or die($db->error);
+    //上傳圖片
+    upload_pic($sn);
+}
+
+function upload_pic($sn)
+{
     if (isset($_FILES)) {
         require_once 'class.upload.php';
         $foo = new Upload($_FILES['pic']);
@@ -70,28 +102,5 @@ function insert_article()
             }
         }
 
-        // $ext = pathinfo($_FILES['pic']['name'], PATHINFO_EXTENSION);
-        // if (!is_dir('uploads')) {
-        //     mkdir('uploads');
-        // }
-        // move_uploaded_file($_FILES['pic']['tmp_name'], "uploads/{$sn}.{$ext}");
     }
-
-    return $sn;
-}
-
-function delete_article($sn)
-{
-    global $db;
-
-    $sql = "DELETE FROM `article` WHERE sn='{$sn}' and username='{$_SESSION['username']}'";
-    $db->query($sql) or die($db->error);
-}
-
-function update_article($sn)
-{
-    global $db;
-
-    $sql = "update `article` Set `title`='{$title}', `content`= '{$content}' WHERE sn='{$sn}' and username='{$_SESSION['username']}'";
-    $db->query($sql) or die($db->error);
 }
