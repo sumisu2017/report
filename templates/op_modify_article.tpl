@@ -7,6 +7,17 @@
 <script src="ckeditor/ckeditor.js"></script>
 
     <form action="admin.php" method="post" enctype="multipart/form-data" class="my-4" id ="myform">
+        <div class="form-group">類別/主題，請擇一
+            <select name="topic_sn"> 
+　              {foreach $all as $topic}
+                    <option value={$topic.topic_sn}  
+                     {if $topic.topic_sn==$article.classify} selected="selected" {/if}
+                    >{$topic.topic_type}-{$topic.topic_title}</option>
+                {foreachelse}
+                    <option value="">尚無內容</option>
+                {/foreach}
+        </select>
+        </div>
         <div class="form-group">
             <label for="title" class="col-form-label sr-only"></label>
             <input type="text" class="form-control validate[required]" name="title" id="title" placeholder="請輸入文章標題" value="{$article.title}" >
@@ -23,6 +34,7 @@
             <input type="hidden" name="sn" value="{$article.sn}">
             <input type="hidden" name="op" value="update">
             <input type="hidden" name="username" value="{$smarty.session.username}">
+            <input type="hidden" name="topic_sn" value={$topic.topic_sn}>
             <button type="submit" class="btn btn-primary">儲存</button>
         </div>
     </form>
