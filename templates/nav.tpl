@@ -10,11 +10,12 @@
         <div class="navbar-nav mr-auto">
             <a href="index.php" class="nav-link text-white">首頁</a>
             <a href="index.php" class="nav-link text-white">圖集</a>
-            </a>
+            
         </div>
 
         <div class="navbar-nav">
         {if isset($smarty.session.username)}
+            <a href="topic.php" class="nav-link text-white">專題</a>
             <a href="admin.php?op=article_form" class="nav-link text-white">發布</a>
             <a href="logout.php" class="nav-link text-white">登出</a>
         {else} 
